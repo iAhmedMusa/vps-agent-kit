@@ -1,0 +1,17 @@
+[Unit]
+Description=VPS Keeper AI agent (updates, self-heal, Telegram)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=root
+WorkingDirectory=/opt/vps-agent
+EnvironmentFile=/opt/vps-agent/.env
+ExecStart=/opt/vps-agent/venv/bin/python agent.py
+Restart=always
+RestartSec=10
+# if the agent restarts mid-upgrade, let apt/dpkg children finish instead of killing them
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
