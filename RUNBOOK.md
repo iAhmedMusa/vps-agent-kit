@@ -14,7 +14,7 @@ Time needed: about 15 minutes.
 | `.env.example` | Config template with placeholder values. Copy to `.env` and fill in real values |
 | `RUNBOOK.md` | This document |
 
-Real keys live only in `.env` on the server. Keep them in a password manager. Never put the real `.env` in Drive, Git or chat.
+Real keys live only in `.env` on the server. Keep them in a password manager. Never put the real `.env` in cloud storage, Git or chat.
 
 ## 1. Before you start
 
@@ -61,22 +61,18 @@ ls /var/run/reboot-required 2>/dev/null && echo "REBOOT NEEDED"
 
 If a reboot is needed, do the checks in **Section 8: Before any reboot**, then `reboot`, and SSH back in.
 
-## 4. Upload and unzip the kit
-
-From your Mac (download the zip from Drive first):
-
-```bash
-scp ~/Downloads/vps-agent-kit.zip root@SERVER_IP:/root/
-```
+## 4. Get the kit
 
 On the server:
 
 ```bash
-apt-get install -y unzip
-cd /root && unzip -o vps-agent-kit.zip
+apt-get install -y git
+cd /root && git clone https://github.com/iAhmedMusa/vps-agent-kit.git
 cd /root/vps-agent-kit
 ls -la        # agent.py  install.sh  vps-agent.service  .env.example  RUNBOOK.md
 ```
+
+Read `agent.py` and `install.sh` before running them as root. See the security risks in [README.md](README.md#security-risks).
 
 ## 5. Configure .env
 
@@ -217,8 +213,8 @@ Change the menu text: edit the `MENU` list in `/opt/vps-agent/agent.py`, restart
 Update with a newer kit:
 
 ```bash
-cd /root/vps-agent-kit         # new files unzipped here
-cp /opt/vps-agent/.env .env    # keep live config
+cd /root/vps-agent-kit && git pull   # fetch the newer kit
+cp /opt/vps-agent/.env .env          # keep live config
 sudo bash install.sh
 ```
 
